@@ -1,5 +1,5 @@
 class NotesController < ApplicationController
-  before_action :set_note, only: [:show, :edit, :update, :destroy]
+  before_action :set_note, only: [:show, :edit, :update]
 
   # GET /notes
   # GET /notes.json
@@ -57,7 +57,12 @@ class NotesController < ApplicationController
   # DELETE /notes/1
   # DELETE /notes/1.json
   def destroy
-    @note.destroy
+    if (params[:tag_deletion] == "true")
+      @object = Tag.where(:id => params[:id]).first
+    else
+      @object = Note.where(:id => params[:id]).first
+    end
+    @object.destroy
     respond_to do |format|
       format.html { redirect_to notes_url, notice: 'Note was successfully destroyed.' }
       format.json { head :no_content }
